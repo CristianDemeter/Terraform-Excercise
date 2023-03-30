@@ -17,3 +17,7 @@ output "iam" {
 output "kms" {
   value = "alias/aw-eu-practice-kms-<id>-${var.environment_char}-<num>"
 }
+
+output "sg_name" {
+  value = "aw-eu-sg-practice-<id>-${var.environment_char}-<num>"
+}

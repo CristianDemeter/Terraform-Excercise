@@ -4,14 +4,21 @@ module "naming" {
   environment_char = var.environment_char
 }
 
-# Get VPC's
+# get VPC config
 
-data "aws_vpc" "selected" {
-  id = var.vpc_id
+data "aws_vpc" "test_main" {
+  filter {
+    name   = "tag:Name"
+    values = ["test-vpc"]
+  }
 }
 
 # AWS Info
 
-data "aws_caller_identity" "current" {}
+data "aws_caller_identity" "current" {
 
-data "aws_region" "current" {}
+}
+
+data "aws_region" "current" {
+
+}

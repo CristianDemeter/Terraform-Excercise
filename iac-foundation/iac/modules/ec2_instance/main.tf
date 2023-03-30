@@ -1,11 +1,9 @@
 resource "aws_instance" "bastion" {
-  ami                     = "ami-0a261c0e5f51090b1"
-  instance_type           = "t2.micro"
-  iam_instance_profile   = aws_iam_instance_profile.bastion_profile.name
-  host_resource_group_arn = ""
-  #
-  subnet_id = ""
-  vpc_security_group_ids = ""
+  ami                     = var.ec2.ami
+  instance_type           = var.ec2.instance_type
+  iam_instance_profile    = aws_iam_instance_profile.bastion_profile.name
+  subnet_id               = ""
+  vpc_security_group_ids  = [aws_security_group.bastion_host.id]
 }
 
 resource "aws_iam_instance_profile" "bastion_profile" {
@@ -35,8 +33,8 @@ EOF
 }
 
 resource "iam_role_policy" "bastion_role_policy" {
-  name = "bastion_role_policy_secretsmanager"
-  role = aws_iam_role.bastion.id
+  name   = "bastion_role_policy_secretsmanager"
+  role   = aws_iam_role.bastion.id
   policy = <<EOF
 {
   "Version": "2012-10-17",
