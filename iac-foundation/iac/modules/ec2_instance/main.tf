@@ -2,8 +2,8 @@ resource "aws_instance" "bastion" {
   ami                     = var.ec2.ami
   instance_type           = var.ec2.instance_type
   iam_instance_profile    = aws_iam_instance_profile.bastion_profile.name
-  subnet_id              = ""
-  vpc_security_group_ids = ""
+  subnet_id               = ""
+  vpc_security_group_ids  = [aws_security_group.bastion_host.id]
 }
 
 resource "aws_iam_instance_profile" "bastion_profile" {
