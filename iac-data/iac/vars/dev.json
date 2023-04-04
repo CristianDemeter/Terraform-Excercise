@@ -1,0 +1,10 @@
+{
+    "environment_char": "d",
+    "environment": "dev",
+    "s3": {
+        "bucket": {
+            "stgarea": {},
+            "src": {}
+        }
+    }
+}
