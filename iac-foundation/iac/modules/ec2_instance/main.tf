@@ -1,3 +1,5 @@
+# Bastion host
+
 resource "aws_instance" "bastion" {
   ami                     = var.ec2.ami
   instance_type           = var.ec2.instance_type
@@ -35,6 +37,66 @@ EOF
 resource "iam_role_policy" "bastion_role_policy" {
   name   = "bastion_role_policy_secretsmanager"
   role   = aws_iam_role.bastion.id
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetResourcePolicy",
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:ListSecretVersionIds"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+# Loader host
+
+resource "aws_instance" "loader" {
+  ami                     = var.ec2.ami
+  instance_type           = var.ec2.instance_type
+  iam_instance_profile    = aws_iam_instance_profile.loader_profile.name
+  subnet_id               = ""
+  vpc_security_group_ids  = [aws_security_group.loader.id]
+}
+
+resource "aws_iam_instance_profile" "loader_profile" {
+  name = replace(replace(module.naming.iam, "<id>", "loader"), "<num>", "001")
+  role = aws_iam_role.loader.name
+}
+
+resource "aws_iam_role" "loader" {
+  name = replace(replace(module.naming.iam, "<id>", "loader"), "<num>", "001")
+
+  #This trust relationship effect allows the AssumeRole action to utilize the ec2 services
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+               "Service": "ec2.amazonaws.com"
+            },
+            "Effect": "Allow",
+            "Sid": ""
+        }
+    ]
+}
+EOF
+}
+
+resource "iam_role_policy" "loader_role_policy" {
+  name   = "loader_role_policy_secretsmanager"
+  role   = aws_iam_role.loader.id
   policy = <<EOF
 {
   "Version": "2012-10-17",

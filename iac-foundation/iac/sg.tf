@@ -3,7 +3,8 @@
 resource "aws_security_group" "bastion_host" {
   name        = replace(replace(module.naming.sg_name, "<id>", "bastionhost"), "<num>", "01")
   description = "Security group for the EC2 bastion host"
-  vpc_id      = data.aws_vpc.test_main.id
+  # TODO, correct?
+  vpc_id      = aws_vpc.main.id
 }
 
 resource "aws_security_group_rule" "bastion_host_all_outbound" {
@@ -20,7 +21,8 @@ resource "aws_security_group_rule" "bastion_host_all_outbound" {
 resource "aws_security_group" "loader" {
   name        = replace(replace(module.naming.sg_name, "<id>", "loader"), "<num>", "01")
   description = "Security group for the EC2 loader"
-  vpc_id      = data.aws_vpc.test_main.id
+  # TODO, correct?
+  vpc_id      = aws_vpc.main.id
 }
 
 resource "aws_security_group_rule" "loader_ssh_inbound" {

@@ -6,12 +6,14 @@ module "naming" {
 
 # get VPC config
 
+/*
 data "aws_vpc" "test_main" {
   filter {
     name   = "tag:Name"
     values = ["test-vpc"]
   }
 }
+*/
 
 # AWS Info
 
